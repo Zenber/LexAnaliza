@@ -1,0 +1,37 @@
+Lex analiza
+automat mam
+
+1. Vyrvorit enum a strukturu
+S_EQ (rovno =)
+S_NEQ (Nerovno !=)
+S_EEQ (2xrovno ==)
+S_LQ (mensi rovno <=)
+S_L (Mensi <)
+S_GQ (Vetsi rovno >=)
+S_G (Vetsi >)
+S_IS (Prirezeno :=)
+S_IF (if)
+S_EF (elif)
+S_EE (ELSE)
+S_VAR (var)
+S_BEG (begin)
+S_END (end)
+
+S_ID (promena) nazev (parametr)
+S_NUM (cislo) hodnota (parametr)
+S_PLU (plus +)
+S_MNU (Minus -)
+S_MUL (Multi *)
+S_DIV (Division /)
+S_LP (Leva duzka "(")
+S_RP (Prava duzka ")")
+S_SEM (Strednik ;)
+
+S_EMTY
+S_ENDOFFILE
+
+++
+
+Cteni znak po znaku ++
+
+Metoda lex ktera bude spracovavat vstup a

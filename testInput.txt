@@ -1,0 +1,12 @@
+begin
+end
+
+ReadLine()
+
+22
+
+endp
+
+samuri
+
+var x = 15
