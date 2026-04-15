@@ -25,9 +25,12 @@ public class LexikarniAnalizator  {
 
     private static int[][] cisloRad = new int[POCET_STAVU][POCET_ZNAKU];
 
+    public TTypSymbolu getSymbol(){
+        return this.symbol.typ;
+    }
 
-    public LexikarniAnalizator() throws IOException {
-        this.reader = new BufferedReader(new FileReader("testInput.txt"));
+    public LexikarniAnalizator(String filename) throws IOException {
+        this.reader = new BufferedReader(new FileReader(filename));
         this.vstup = new TVstup();
         this.symbol = new TSymbol();
     }
@@ -75,6 +78,7 @@ public class LexikarniAnalizator  {
             for(int j = 0; j < POCET_ZNAKU; j++){
                 cisloRad[i][j] = S_CHYBA;
             }
+
         }
         // V priloze pdf z tabulkou
         cisloRad[0][0] = 1;
@@ -310,23 +314,23 @@ public class LexikarniAnalizator  {
         dejZnak();
     }
 
-    public static void main(String[] args) throws IOException {
-        LexikarniAnalizator la = new LexikarniAnalizator();
-        BufferedWriter bw = new BufferedWriter(new FileWriter("lexVystup.txt"));
-
-        la.initLex();
-        la.lex();
-        System.out.println(la.symbol.typ.toString() + " " + la.symbol.atributo);
-        bw.write(la.symbol.typ.toString() + " " + la.symbol.atributo);
-        bw.newLine();
-        while(la.symbol.typ != S_ENDOFFILE){
-            la.lex();
-            System.out.println(la.symbol.typ.toString() + " " + la.symbol.atributo);
-            bw.write(la.symbol.typ.toString() + " " + la.symbol.atributo);
-            bw.newLine();
-        }
-        bw.close();
-    }
+//    public static void main(String[] args) throws IOException {
+//        LexikarniAnalizator la = new LexikarniAnalizator("testInput.txt");
+//        BufferedWriter bw = new BufferedWriter(new FileWriter("lexVystup.txt"));
+//
+//        la.initLex();
+//        la.lex();
+//        System.out.println(la.symbol.typ.toString() + " " + la.symbol.atributo);
+//        bw.write(la.symbol.typ.toString() + " " + la.symbol.atributo);
+//        bw.newLine();
+//        while(la.symbol.typ != S_ENDOFFILE){
+//            la.lex();
+//            System.out.println(la.symbol.typ.toString() + " " + la.symbol.atributo);
+//            bw.write(la.symbol.typ.toString() + " " + la.symbol.atributo);
+//            bw.newLine();
+//        }
+//        bw.close();
+//    }
 
 
 
