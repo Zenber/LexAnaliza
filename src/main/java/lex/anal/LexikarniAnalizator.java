@@ -29,6 +29,10 @@ public class LexikarniAnalizator  {
         return this.symbol.typ;
     }
 
+    public String getSymbolValue(){
+        return symbol.atributo;
+    }
+
     public LexikarniAnalizator(String filename) throws IOException {
         this.reader = new BufferedReader(new FileReader(filename));
         this.vstup = new TVstup();

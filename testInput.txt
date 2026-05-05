@@ -1,4 +1,11 @@
-var x = 1;
+var x = 12;
+var y = 4;
 
 begin
+if(x == 1) {
+    y := 2;
+} else {
+    y := 14;
+}
+
 end
