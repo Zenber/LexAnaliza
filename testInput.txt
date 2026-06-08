@@ -1,11 +1,13 @@
 var x = 12;
 var y = 4;
 
+
 begin
 if(x == 1) {
     y := 2;
 } else {
     y := 14;
 }
+x := x+y+1 +(15 -4);
 
 end
