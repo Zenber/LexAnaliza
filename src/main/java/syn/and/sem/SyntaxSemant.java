@@ -3,6 +3,8 @@ package syn.and.sem;
 import lex.anal.LexikarniAnalizator;
 import lex.anal.TTypSymbolu;
 
+import javax.sound.midi.Soundbank;
+
 import static lex.anal.TTypSymbolu.*;
 
 import java.io.IOException;
@@ -19,9 +21,6 @@ public class SyntaxSemant {
     private HashMap<String, Integer> symTable;
     private List<String> decVar;
     private List<String> functions;
-    //For function that returns nosing
-    private List<String> functionsVoid;
-    private List<String> functionsNoArgs;
 
     // flag pro if else
     private boolean execute = true;
@@ -40,8 +39,6 @@ public class SyntaxSemant {
         symTable = new HashMap<>();
         functions = new ArrayList<>();
         decVar = new ArrayList<>();
-        functionsVoid = new ArrayList<>();
-        functionsNoArgs = new ArrayList<>();
     }
 
     public void S_Analiza() throws IOException {
@@ -58,8 +55,6 @@ public class SyntaxSemant {
             case S_BEG:
                 functions.add("READLINE");
                 functions.add("WRITELINE");
-                functionsVoid.add("WRITELINE");
-                functionsNoArgs.add("READLINE");
                 decVar.add("READLINE");
                 DecPart();
                 CodePart();
@@ -213,12 +208,6 @@ public class SyntaxSemant {
                 // Sym start
 
                 if(execute){
-                    // Pro funkce ktere mohou vratit data, neimplementovano
-                    if(functionsVoid.contains(id)){
-                        throw new SemanticException("Function is void.");
-                    }
-
-
 
                     if(!symTable.containsKey(id)){
                         symTable.put(id, value);
@@ -233,12 +222,7 @@ public class SyntaxSemant {
                 break;
             case S_LP:
                 pop(S_LP);
-                Integer value1 = ArgList(id);
-
-                // Check if function with no args resiving them
-                if(value1 != null && functionsNoArgs.contains(id)) {
-                    throw new SemanticException("Function with no args resiving argument: " + value1);
-                }
+                Integer value1 = ArgList();
 
                 pop(S_RP);
                 pop(S_SEM);
@@ -248,7 +232,7 @@ public class SyntaxSemant {
         }
     }
     // 17 18
-    private Integer ArgList(String id) throws IOException {
+    private Integer ArgList() throws IOException {
         switch (lexer.getSymbol()){
             case S_LP:
             case S_ID:
@@ -449,16 +433,18 @@ public class SyntaxSemant {
             case S_ID:
                 String key = lexer.getSymbolValue();
 
+                Integer value1 = -1;
 
-                if(!decVar.contains(key)){
-                    throw new SemanticException("Veriable is not declared!");
-                }
+                pop(S_ID);
 
-
-                Integer value1;
+                Integer value3 = Param();
 
                 if (key.equals("READLINE")){
                     value1 = ReadInput();
+                } else
+                if (key.equals("WRITELINE")){
+                    System.out.println(value3);
+                    value1 = value3;
                 } else {
                     if(!symTable.containsKey(key)){
                         throw new SemanticException("Veriable is not initiated!");
@@ -466,7 +452,6 @@ public class SyntaxSemant {
                     value1 = symTable.get(key);
                 }
 
-                pop(S_ID);
                 return value1;
             case S_NUM:
                 int value2 = 0;
@@ -482,6 +467,33 @@ public class SyntaxSemant {
                 throw new IOException("Unexpected token: " + lexer.getSymbol());
         }
     }
+
+    private Integer Param() throws IOException {
+        switch (lexer.getSymbol()){
+            case S_LP:
+                pop(S_LP);
+                Integer value1 = ArgList();
+                pop(S_RP);
+                return value1;
+            case S_DIV:
+            case S_MUL:
+            case S_PLU:
+            case S_MNU:
+            case S_RP:
+            case S_LQ:
+            case S_NEQ:
+            case S_GQ:
+            case S_G:
+            case S_L:
+            case S_SEM:
+            case S_EEQ:
+                return null;
+            default:
+                throw new IOException("Unexpected token: " + lexer.getSymbol());
+
+        }
+    }
+
     // 38 39 40
     private int M(int in) throws IOException {
         switch (lexer.getSymbol()){
@@ -500,7 +512,6 @@ public class SyntaxSemant {
             case S_PLU:
             case S_MNU:
             case S_RP:
-            //case S_EQ:
             case S_LQ:
             case S_NEQ:
             case S_GQ:

@@ -1,9 +1,12 @@
 var x = 12;
+var y = 22;
+var z;
 
 begin
 
-x := READLINE;
+x := READLINE(x);
+x := WRITELINE(x);
 
-x := 12 +4 +(32) + 32 -(122 *4);
-
+z := x + (y * y) -21 +887;
+z := WRITELINE(z);
 end

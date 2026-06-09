@@ -2,7 +2,7 @@ G = (N, T, P ,Start)
 
 N ={Start, DecPart, CodePart, DecList, DecInit,  D, StmtList, Stmt, Assigh, Ifstm, A, ArgList, ElsePart, V,  P, Q, R, K, L ,M }
 
-T = {VAR, BEGIN, END, IF, ELSE, ELIF, ID, NUM, ; , :=, ( , ) , ==. <=, >=, !=, <, >, {, }. +, -, *, /}
+T = {VAR, BEGIN, END, IF, ELSE, ELIF, ID, NUM, ; , :=, ( , ) , ==. <=, >=, !=, <, >, {, }. +, -, *, /, =}
 
 P:
 
@@ -44,7 +44,9 @@ R → LM						31
 
 K → +RK | −RK | ε 				32	33	34
 
-L → (V) | ID | NUM				35	36	37
+L → (V) | ID Param | NUM				35	36	37
+
+Param -> (ArgList) | ε          41  42
 
 M → ∗LM | /LM | ε 				38	39	40
 
@@ -96,7 +98,7 @@ FL(L) = { * , /,  + ,  -, ), ==, <=, !=, >=, <, >, ;}
 
 FL(M) = {+ ,  -, ), ==, <=, !=, >=, <, >, ;}
 
-
+FL(Param) = { * , /,  + ,  -, ), ==, <=, !=, >=, <, >, ;}
 
 Porovnavaci mnoziny
 
@@ -152,6 +154,8 @@ F(L) = { (, ID NUM}
 
 {(} | {ID} | {Num}	35	36	37
 
+{(} | { * , /,  + ,  -, ), ==, <=, !=, >=, <, >, ;}     41  42
+
 {*} | {/} | {+ ,  -, ), ==, <=, !=, >=, <, >, ;}	38	39	40
 
 
@@ -159,9 +163,9 @@ F(L) = { (, ID NUM}
 Semanticka pravidla
 Start -> DecPart CodePart		{Func.add(“READLINE”, “WRITELINE”)}
 
-DecPart -> VAR ID DecInit; DecPart | eps		{If ID in Sym then error else ID to table Sym; DecInit.id = ID}
+DecPart -> VAR ID DecInit; DecPart | ε		{If ID in Sym then error else ID to table Sym; DecInit.id = ID}
 
-DecInit -> = NUM | eps
+DecInit -> = NUM | ε
 
 CodePart - > BEGIN D END
 
@@ -175,7 +179,7 @@ Assigh -> ID A		{If ID in Sym; A.id = ID else error}
 
 A -> := V ;  | (ArgList)	;	{Id A.id in Sym : A.id.val = V.val; (id ; val) to table Sym; id to table Init} {If A.id in Func Then error; A.val = ArgList.val}
 
-ArgList -> V | eps		{ArgList.val = V.val} {}
+ArgList -> V | ε		{ArgList.val = V.val} {}
 
 
 
@@ -193,6 +197,8 @@ R → LM						31
 
 K → +RK | −RK | ε 				32	33	34
 
-L → (V) | ID | NUM	{L.val = V.val}	{If ID in Sym && ID in Init then L.val = Sym.getValueFromKey(ID)} {L.val = NUM}
+L → (V) | ID Param | NUM	{L.val = V.val}	{If ID in Sym && ID in Init then L.val = Sym.getValueFromKey(ID), If id in func : call func with Param.out as args} {L.val = NUM}
+
+Param -> (ArgList) | ε          {Param.out = ArgList.val}
 
 M → ∗LM | /LM | ε 				38	39	40
