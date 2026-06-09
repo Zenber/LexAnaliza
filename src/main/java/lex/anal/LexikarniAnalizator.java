@@ -146,7 +146,6 @@ public class LexikarniAnalizator  {
                             symbol.typ = S_NEQ;
                             break;
                         default:
-                            //TODO exception
                             throw new LexicalException("Neznámý znak: " + vstup.znak);
                     }
                     break;
@@ -210,7 +209,6 @@ public class LexikarniAnalizator  {
                             symbol.typ = S_IS;
                             break;
                         default:
-                            //TODO exception
                             throw new LexicalException("Neznámý znak: " + vstup.znak);
                     }
                     break;
@@ -238,7 +236,6 @@ public class LexikarniAnalizator  {
                     symbol.typ = S_ENDOFFILE;
                     break;
                 default:
-                    // TODO exception
                     throw new LexicalException("Neznámý znak: " + vstup.znak);
             }
         }

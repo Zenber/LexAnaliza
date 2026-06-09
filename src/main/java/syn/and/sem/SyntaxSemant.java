@@ -6,7 +6,9 @@ import lex.anal.TTypSymbolu;
 import static lex.anal.TTypSymbolu.*;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.*;
+import java.util.Scanner;
 
 
 public class SyntaxSemant {
@@ -58,7 +60,7 @@ public class SyntaxSemant {
                 functions.add("WRITELINE");
                 functionsVoid.add("WRITELINE");
                 functionsNoArgs.add("READLINE");
-
+                decVar.add("READLINE");
                 DecPart();
                 CodePart();
                 break;
@@ -215,6 +217,7 @@ public class SyntaxSemant {
                     if(functionsVoid.contains(id)){
                         throw new SemanticException("Function is void.");
                     }
+
 
 
                     if(!symTable.containsKey(id)){
@@ -451,11 +454,17 @@ public class SyntaxSemant {
                     throw new SemanticException("Veriable is not declared!");
                 }
 
-                if(!symTable.containsKey(key)){
-                    throw new SemanticException("Veriable is not initiated!");
-                }
 
-                Integer value1 = symTable.get(key);
+                Integer value1;
+
+                if (key.equals("READLINE")){
+                    value1 = ReadInput();
+                } else {
+                    if(!symTable.containsKey(key)){
+                        throw new SemanticException("Veriable is not initiated!");
+                    }
+                    value1 = symTable.get(key);
+                }
 
                 pop(S_ID);
                 return value1;
@@ -503,6 +512,19 @@ public class SyntaxSemant {
             default:
                 throw new IOException("Unexpected token: " + lexer.getSymbol());
         }
+    }
+
+    private int ReadInput() throws IOException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Zadejte hodnotu");
+        int output = -1;
+        try {
+            output = sc.nextInt();
+        } catch (Exception ex){
+            throw new IOException("Zadany vstup neni typu Int");
+        }
+
+        return output;
     }
 
     private void pop(TTypSymbolu typ) throws IOException {
